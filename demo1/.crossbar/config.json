@@ -59,7 +59,7 @@
             "components": [
                 {
                     "type": "class",
-                    "classname": "hello.AppSession",
+                    "classname": "server.AppSession",
                     "realm": "realm1",
                     "transport": {
                         "type": "websocket",

@@ -47,11 +47,10 @@
             );
             // PUBLISH an event every second
             //
-            var temp = 25;
+
             t1 = setInterval(function () {
-                session.publish('com.kx.onTempChaged', ['Hello from client onTempChaged', temp]);
+                session.publish('com.kx.onTempChaged', ['Hello from client onTempChaged']);
                 console.log("Client: published to server with topic 'com.kx.onTempChaged'");
-                temp += 5;
             }, 60000);
             // REGISTER a procedure for remote calling
             //
@@ -63,10 +62,10 @@
             }
             session.register('com.kx.c_mul2', c_mul2).then(
                 function (reg) {
-                    console.log('Client: procedure registered s_mul2()');
+                    console.log('Client: procedure registered c_mul2()');
                 },
                 function (err) {
-                    console.log('Client: failed to register procedure s_mul2()', err);
+                    console.log('Client: failed to register procedure c_mul2()', err);
                 }
             );
             // CALL a remote procedure every second

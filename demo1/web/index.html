@@ -61,7 +61,7 @@
                 console.log("Client: c_mul2() was called by Server with " + x + " and " + y);
                 return x * y;
             }
-            session.register('com.kx.c_mul2', s_mul2).then(
+            session.register('com.kx.c_mul2', c_mul2).then(
                 function (reg) {
                     console.log('Client: procedure registered s_mul2()');
                 },

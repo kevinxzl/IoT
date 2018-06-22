@@ -18,7 +18,7 @@ class AppSession(ApplicationSession):
         def onTempChaged(args):
             msg = args[0]
             self.log.info(
-                "client event for 'onTempChaged' received: {msg}", msg=msg)
+                "Server: client event for 'onTempChaged' received: {msg}", msg=msg)
 
         sub = yield self.subscribe(onTempChaged, u'com.kx.onTempChaged')
         self.log.info("Server: subscribed to topic 'onTempChaged'")

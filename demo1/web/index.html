@@ -49,8 +49,8 @@
             //
             var temp = 25;
             t1 = setInterval(function () {
-                session.publish('com.kx.onTempChaged', 'Hello from client onTempChaged', temp);
-                console.log("Client: published to topic 'com.kx.onTempChaged'");
+                session.publish('com.kx.onTempChaged', ['Hello from client onTempChaged', temp]);
+                console.log("Client: published to server with topic 'com.kx.onTempChaged'");
                 temp += 5;
             }, 60000);
             // REGISTER a procedure for remote calling
@@ -58,15 +58,15 @@
             function c_mul2(args) {
                 var x = args[0];
                 var y = args[1];
-                console.log("Client: mul2() called with " + x + " and " + y);
+                console.log("Client: c_mul2() was called by Server with " + x + " and " + y);
                 return x * y;
             }
-            session.register('com.kx.c_mul2', c_mul2).then(
+            session.register('com.kx.c_mul2', s_mul2).then(
                 function (reg) {
-                    console.log('procedure registered');
+                    console.log('Client: procedure registered s_mul2()');
                 },
                 function (err) {
-                    console.log('failed to register procedure', err);
+                    console.log('Client: failed to register procedure s_mul2()', err);
                 }
             );
             // CALL a remote procedure every second
@@ -75,10 +75,10 @@
             t2 = setInterval(function () {
                 session.call('com.kx.s_add2', [x, 18]).then(
                     function (res) {
-                        console.log("Client: call remote serer s_add2() result:", res);
+                        console.log("Client: call remote Server function s_add2() result:", res);
                     },
                     function (err) {
-                        console.log("add2() error:", err);
+                        console.log("Client: call remote Server function s_add2() error:", err);
                     }
                 );
                 x += 3;

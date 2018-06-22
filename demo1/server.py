@@ -28,7 +28,8 @@ class AppSession(ApplicationSession):
         ##
 
         def s_add2(x, y):
-            self.log.info("Server: add2() called with {x} and {y}", x=x, y=y)
+            self.log.info(
+                "Server: s_add2() called by Client with {x} and {y}", x=x, y=y)
             return x + y
 
         reg = yield self.register(s_add2, u'com.kx.s_add2')
@@ -43,7 +44,7 @@ class AppSession(ApplicationSession):
             # PUBLISH an event
             ##
             yield self.publish(u'com.kx.oncounter', counter, ph1)
-            self.log.info("Server: published to 'oncounter' with counter {counter} ph1 {ph1}",
+            self.log.info("Server: published to Client with 'oncounter' with counter {counter} ph1 {ph1}",
                           counter=counter, ph1=ph1)
             counter += 1
             ph1 += 3
@@ -52,7 +53,7 @@ class AppSession(ApplicationSession):
             ##
             try:
                 res = yield self.call(u'com.kx.c_mul2', counter, 3)
-                self.log.info("Server: mul2() called with result: {result}",
+                self.log.info("Server: mul2() called client function with result: {result}",
                               result=res)
             except ApplicationError as e:
                 # ignore errors due to the frontend not yet having

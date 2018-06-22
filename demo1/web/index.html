@@ -34,21 +34,24 @@
             //
             function on_counter(args) {
                 var counter = args[0];
-                console.log("Client: received event from server with counter " + counter);
+                var ph1 = args[1];
+                console.log("Client: received event from server with counter: " + counter + "ph1:" + ph1);
             }
             session.subscribe('com.kx.oncounter', on_counter).then(
                 function (sub) {
-                    console.log('subscribed to topic');
+                    console.log('Client: subscribed to topic');
                 },
                 function (err) {
-                    console.log('failed to subscribe to topic', err);
+                    console.log('Client: failed to subscribe to topic', err);
                 }
             );
             // PUBLISH an event every second
             //
+            var temp = 25;
             t1 = setInterval(function () {
-                session.publish('com.kx.onTempChaged', ['Hello from client onTempChaged']);
-                console.log("Cleint: published to topic 'com.kx.onTempChaged'");
+                session.publish('com.kx.onTempChaged', 'Hello from client onTempChaged', temp);
+                console.log("Client: published to topic 'com.kx.onTempChaged'");
+                temp += 5;
             }, 60000);
             // REGISTER a procedure for remote calling
             //

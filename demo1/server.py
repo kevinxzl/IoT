@@ -15,9 +15,11 @@ class AppSession(ApplicationSession):
 
         # SUBSCRIBE to a topic and receive events
         ##
-        def onTempChaged(msg):
+        def onTempChaged(args):
+            msg = args[0]
+            ph1 = args[1]
             self.log.info(
-                "client event for 'onTempChaged' received: {msg}", msg=msg)
+                "client event for 'onTempChaged' received: {msg} {ph1}", msg=msg, ph1=ph1)
 
         sub = yield self.subscribe(onTempChaged, u'com.kx.onTempChaged')
         self.log.info("Server: subscribed to topic 'onTempChaged'")
@@ -35,14 +37,16 @@ class AppSession(ApplicationSession):
         # PUBLISH and CALL every second .. forever
         ##
         counter = 0
+        ph1 = 10
         while True:
 
             # PUBLISH an event
             ##
-            yield self.publish(u'com.kx.oncounter', counter)
-            self.log.info("Server: published to 'oncounter' with counter {counter}",
-                          counter=counter)
+            yield self.publish(u'com.kx.oncounter', counter, ph1)
+            self.log.info("Server: published to 'oncounter' with counter {counter} ph1 {ph1}",
+                          counter=counter, ph1=ph1)
             counter += 1
+            ph1 += 3
 
             # CALL a remote procedure
             ##

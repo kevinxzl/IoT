@@ -1,101 +1,103 @@
 <!DOCTYPE html>
 <html>
-   <body>
-      <h1>Cerebra WAMP</h1>
-      <p>Open JavaScript console to watch output.</p>
-      <script>AUTOBAHN_DEBUG = false;</script>
-      <script src="/shared/autobahn/autobahn.min.js"></script>
 
-      <script>
-         // the URL of the WAMP Router (Crossbar.io)
-         //
-         var wsuri;
-         if (document.location.origin === "null" || document.location.origin === "file://") {
+<body>
+    <h1>Cerebra WAMP</h1>
+    <p>Open JavaScript console to watch output.</p>
+    <script>AUTOBAHN_DEBUG = false;</script>
+    <script src="/shared/autobahn/autobahn.min.js"></script>
+
+    <script>
+        // the URL of the WAMP Router (Crossbar.io)
+        //
+        var wsuri;
+        if (document.location.origin === "null" || document.location.origin === "file://") {
             wsuri = "ws://127.0.0.1:8080/ws";
-         } else {
+        } else {
             wsuri = (document.location.protocol === "http:" ? "ws:" : "wss:") + "//" +
-                        document.location.host + "/ws";
-         }
-         // the WAMP connection to the Router
-         //
-         var connection = new autobahn.Connection({
+                document.location.host + "/ws";
+        }
+        // the WAMP connection to the Router
+        //
+        var connection = new autobahn.Connection({
             url: wsuri,
             realm: "realm1"
-         });
-         // timers
-         //
-         var t1, t2;
-         // fired when connection is established and session attached
-         //
-         connection.onopen = function (session, details) {
+        });
+        // timers
+        //
+        var t1, t2;
+        // fired when connection is established and session attached
+        //
+        connection.onopen = function (session, details) {
             console.log("Client: Connected to Server");
             // SUBSCRIBE to a topic and receive events
             //
-            function on_counter (args) {
-               var counter = args[0];
-               console.log("Client: received event from server with counter " + counter);
+            function on_counter(args) {
+                var counter = args[0];
+                console.log("Client: received event from server with counter " + counter);
             }
             session.subscribe('com.kx.oncounter', on_counter).then(
-               function (sub) {
-                  console.log('subscribed to topic');
-               },
-               function (err) {
-                  console.log('failed to subscribe to topic', err);
-               }
+                function (sub) {
+                    console.log('subscribed to topic');
+                },
+                function (err) {
+                    console.log('failed to subscribe to topic', err);
+                }
             );
             // PUBLISH an event every second
             //
             t1 = setInterval(function () {
-               session.publish('com.kx.onTempChaged', ['Hello from client onTempChaged']);
-               console.log("Cleint: published to topic 'com.kx.onTempChaged'");
+                session.publish('com.kx.onTempChaged', ['Hello from client onTempChaged']);
+                console.log("Cleint: published to topic 'com.kx.onTempChaged'");
             }, 60000);
             // REGISTER a procedure for remote calling
             //
-            function c_mul2 (args) {
-               var x = args[0];
-               var y = args[1];
-               console.log("Client: mul2() called with " + x + " and " + y);
-               return x * y;
+            function c_mul2(args) {
+                var x = args[0];
+                var y = args[1];
+                console.log("Client: mul2() called with " + x + " and " + y);
+                return x * y;
             }
             session.register('com.kx.c_mul2', c_mul2).then(
-               function (reg) {
-                  console.log('procedure registered');
-               },
-               function (err) {
-                  console.log('failed to register procedure', err);
-               }
+                function (reg) {
+                    console.log('procedure registered');
+                },
+                function (err) {
+                    console.log('failed to register procedure', err);
+                }
             );
             // CALL a remote procedure every second
             //
             var x = 0;
             t2 = setInterval(function () {
-               session.call('com.kx.s_add2', [x, 18]).then(
-                  function (res) {
-                     console.log("Client: call remote serer s_add2() result:", res);
-                  },
-                  function (err) {
-                     console.log("add2() error:", err);
-                  }
-               );
-               x += 3;
+                session.call('com.kx.s_add2', [x, 18]).then(
+                    function (res) {
+                        console.log("Client: call remote serer s_add2() result:", res);
+                    },
+                    function (err) {
+                        console.log("add2() error:", err);
+                    }
+                );
+                x += 3;
             }, 90000);
-         };
-         // fired when connection was lost (or could not be established)
-         //
-         connection.onclose = function (reason, details) {
+        };
+        // fired when connection was lost (or could not be established)
+        //
+        connection.onclose = function (reason, details) {
             console.log("Client: Connection lost: " + reason);
             if (t1) {
-               clearInterval(t1);
-               t1 = null;
+                clearInterval(t1);
+                t1 = null;
             }
             if (t2) {
-               clearInterval(t2);
-               t2 = null;
+                clearInterval(t2);
+                t2 = null;
             }
-         }
-         // now actually open the connection
-         //
-         connection.open();
-      </script>
-   </body>
+        }
+        // now actually open the connection
+        //
+        connection.open();
+    </script>
+</body>
+
 </html>

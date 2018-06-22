@@ -15,8 +15,7 @@ class AppSession(ApplicationSession):
 
         # SUBSCRIBE to a topic and receive events
         ##
-        def onTempChaged(args):
-            msg = args[0]
+        def onTempChaged(msg):
             self.log.info(
                 "Server: client event for 'onTempChaged' received: {msg}", msg=msg)
 
@@ -32,7 +31,7 @@ class AppSession(ApplicationSession):
             return x + y
 
         reg = yield self.register(s_add2, u'com.kx.s_add2')
-        self.log.info("Server: procedure add2() registered")
+        self.log.info("Server: procedure s_add2() registered")
 
         # PUBLISH and CALL every second .. forever
         ##
@@ -52,7 +51,7 @@ class AppSession(ApplicationSession):
             ##
             try:
                 res = yield self.call(u'com.kx.c_mul2', counter, 3)
-                self.log.info("Server: mul2() called client function with result: {result}",
+                self.log.info("Server: c_mul2() called client function with result: {result}",
                               result=res)
             except ApplicationError as e:
                 # ignore errors due to the frontend not yet having
